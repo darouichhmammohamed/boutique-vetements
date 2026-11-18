@@ -1,0 +1,105 @@
+<app-admin-onglets />
+
+@if (erreur()) {
+  <div class="alert alert-danger">{{ erreur() }}</div>
+}
+
+@if (chargement()) {
+  <div class="text-center my-5">
+    <div class="spinner-border text-dark" role="status"></div>
+  </div>
+} @else {
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="text-muted small">Commandes</div>
+          <div class="fs-3 fw-bold">{{ commandes().length }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="text-muted small">En attente</div>
+          <div class="fs-3 fw-bold">{{ enAttente() }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="text-muted small">Chiffre d'affaires (hors annulées)</div>
+          <div class="fs-3 fw-bold">{{ chiffreAffaires() | currency: 'EUR' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">N°</th>
+            <th scope="col">Date</th>
+            <th scope="col">Client</th>
+            <th scope="col" class="text-end">Total</th>
+            <th scope="col">Statut</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of commandes(); track c.id) {
+            <tr>
+              <td class="fw-semibold">{{ c.id }}</td>
+              <td class="text-nowrap">{{ c.dateCommande | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                <div>{{ c.utilisateur.nom }}</div>
+                <div class="small text-muted">{{ c.utilisateur.email }}</div>
+              </td>
+              <td class="text-end text-nowrap fw-semibold">{{ c.total | currency: 'EUR' }}</td>
+              <td>
+                @if (c.statut === 'ANNULEE') {
+                  <span class="badge text-bg-secondary">Annulée</span>
+                } @else {
+                  <select class="form-select form-select-sm" aria-label="Statut de la commande"
+                          [value]="c.statut" (change)="changerStatut(c, $any($event.target).value)">
+                    @for (s of statuts; track s.valeur) {
+                      <option [value]="s.valeur" [selected]="s.valeur === c.statut">{{ s.libelle }}</option>
+                    }
+                  </select>
+                }
+              </td>
+              <td class="text-end">
+                <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" (click)="basculerDetails(c.id)">
+                  {{ ouvertes().has(c.id) ? 'Masquer' : 'Détails' }} ({{ c.lignes.length }})
+                </button>
+              </td>
+            </tr>
+            @if (ouvertes().has(c.id)) {
+              <tr class="table-light">
+                <td colspan="6">
+                  <div class="small mb-2"><strong>Livraison :</strong> {{ c.adresseLivraison }}</div>
+                  <ul class="list-unstyled mb-0">
+                    @for (l of c.lignes; track l.id) {
+                      <li class="d-flex align-items-center gap-2 py-1">
+                        <img [src]="l.produit.imageUrl" [alt]="l.produit.nom" class="miniature">
+                        <span class="flex-grow-1">{{ l.produit.nom }} · taille {{ l.taille }} · × {{ l.quantite }}</span>
+                        <span class="text-nowrap">{{ l.prixUnitaire * l.quantite | currency: 'EUR' }}</span>
+                      </li>
+                    }
+                  </ul>
+                </td>
+              </tr>
+            }
+          } @empty {
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">Aucune commande pour le moment.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

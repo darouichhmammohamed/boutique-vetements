@@ -1,0 +1,60 @@
+<div class="row justify-content-center">
+  <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h3 fw-bold mb-4 text-center">Créer un compte</h1>
+
+        @if (erreur()) {
+          <div class="alert alert-danger small">{{ erreur() }}</div>
+        }
+
+        <form [formGroup]="formulaire" (ngSubmit)="inscrire()" novalidate>
+          <div class="mb-3">
+            <label for="nom" class="form-label">Nom complet</label>
+            <input id="nom" type="text" class="form-control" formControlName="nom" autocomplete="name"
+                   [class.is-invalid]="invalide('nom') || erreursServeur()['nom']">
+            <div class="invalid-feedback">{{ erreursServeur()['nom'] || 'Le nom est obligatoire.' }}</div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" type="email" class="form-control" formControlName="email" autocomplete="email"
+                   [class.is-invalid]="invalide('email') || erreursServeur()['email']">
+            <div class="invalid-feedback">{{ erreursServeur()['email'] || 'Saisissez un email valide.' }}</div>
+          </div>
+          <div class="mb-3">
+            <label for="motDePasse" class="form-label">Mot de passe</label>
+            <div class="input-group has-validation">
+              <input id="motDePasse" class="form-control" formControlName="motDePasse" autocomplete="new-password"
+                     [type]="motDePasseVisible() ? 'text' : 'password'"
+                     [class.is-invalid]="invalide('motDePasse') || erreursServeur()['motDePasse']">
+              <button class="btn btn-outline-secondary" type="button" (click)="basculerMotDePasse()"
+                      [attr.aria-label]="motDePasseVisible() ? 'Masquer les mots de passe' : 'Afficher les mots de passe'"
+                      [attr.aria-pressed]="motDePasseVisible()">
+                {{ motDePasseVisible() ? '🙈' : '👁' }}
+              </button>
+              <div class="invalid-feedback">{{ erreursServeur()['motDePasse'] || 'Au moins 6 caractères.' }}</div>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label for="confirmation" class="form-label">Confirmer le mot de passe</label>
+            <input id="confirmation" class="form-control" formControlName="confirmation" autocomplete="new-password"
+                   [type]="motDePasseVisible() ? 'text' : 'password'"
+                   [class.is-invalid]="formulaire.controls.confirmation.touched && (formulaire.controls.confirmation.invalid || formulaire.hasError('differents'))">
+            <div class="invalid-feedback">Les deux mots de passe doivent être identiques.</div>
+          </div>
+          <button type="submit" class="btn btn-dark w-100" [disabled]="envoi()">
+            @if (envoi()) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Créer mon compte
+          </button>
+        </form>
+
+        <p class="text-center small mt-4 mb-0">
+          Déjà inscrit ?
+          <a routerLink="/connexion" [queryParams]="{ retour: retour }">Se connecter</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

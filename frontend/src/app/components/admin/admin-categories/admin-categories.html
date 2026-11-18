@@ -1,0 +1,38 @@
+<app-admin-onglets />
+
+<div class="row">
+  <div class="col-12 col-lg-8">
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Nom de la nouvelle catégorie" aria-label="Nouvelle catégorie"
+             [value]="nouveauNom()" (input)="nouveauNom.set($any($event.target).value)" (keyup.enter)="ajouter()">
+      <button class="btn btn-dark" type="button" [disabled]="!nouveauNom().trim()" (click)="ajouter()">Ajouter</button>
+    </div>
+
+    @if (succes()) {
+      <div class="alert alert-success">{{ succes() }}</div>
+    }
+    @if (erreur()) {
+      <div class="alert alert-danger">{{ erreur() }}</div>
+    }
+
+    <ul class="list-group shadow-sm">
+      @for (c of categories(); track c.id) {
+        <li class="list-group-item d-flex align-items-center gap-2 py-3">
+          @if (enEdition() === c.id) {
+            <input type="text" class="form-control form-control-sm" aria-label="Nom de la catégorie"
+                   [value]="nomEdite()" (input)="nomEdite.set($any($event.target).value)"
+                   (keyup.enter)="enregistrer(c)" (keyup.escape)="annulerEdition()">
+            <button class="btn btn-dark btn-sm" type="button" (click)="enregistrer(c)">Enregistrer</button>
+            <button class="btn btn-outline-secondary btn-sm" type="button" (click)="annulerEdition()">Annuler</button>
+          } @else {
+            <span class="flex-grow-1 fw-semibold">{{ c.nom }}</span>
+            <button class="btn btn-outline-dark btn-sm" type="button" (click)="commencerEdition(c)">Renommer</button>
+            <button class="btn btn-outline-danger btn-sm" type="button" (click)="supprimer(c)">Supprimer</button>
+          }
+        </li>
+      } @empty {
+        <li class="list-group-item text-muted text-center py-4">Aucune catégorie.</li>
+      }
+    </ul>
+  </div>
+</div>

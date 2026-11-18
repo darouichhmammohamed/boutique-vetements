@@ -1,0 +1,86 @@
+<h1 class="h3 fw-bold mb-4">Mon panier</h1>
+
+@if (panier.articles().length === 0) {
+  <div class="text-center bg-white rounded-4 shadow-sm p-5">
+    <p class="fs-5 mb-3">Votre panier est vide.</p>
+    <a routerLink="/" class="btn btn-dark">Découvrir les produits</a>
+  </div>
+} @else {
+  <div class="row g-4">
+    <div class="col-12 col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <ul class="list-group list-group-flush">
+          @for (article of panier.articles(); track article.produit.id + '-' + article.taille) {
+            <li class="list-group-item py-3">
+              <div class="d-flex gap-3 align-items-center">
+                <img [src]="article.produit.imageUrl" [alt]="article.produit.nom" class="miniature">
+                <div class="flex-grow-1">
+                  <a [routerLink]="['/produits', article.produit.id]" class="fw-semibold text-dark text-decoration-none">
+                    {{ article.produit.nom }}
+                  </a>
+                  <div class="small text-muted">
+                    Taille {{ article.taille }} · {{ article.produit.prix | currency: 'EUR' }} l'unité
+                  </div>
+                  <div class="d-flex flex-wrap align-items-center gap-3 mt-2">
+                    <div class="input-group input-group-sm quantite">
+                      <button class="btn btn-outline-secondary" type="button" (click)="changerQuantite(article, -1)"
+                              aria-label="Diminuer la quantité">−</button>
+                      <span class="form-control text-center">{{ article.quantite }}</span>
+                      <button class="btn btn-outline-secondary" type="button" (click)="changerQuantite(article, 1)"
+                              [disabled]="article.quantite >= article.produit.stock" aria-label="Augmenter la quantité">+</button>
+                    </div>
+                    <button class="btn btn-link btn-sm text-danger p-0" type="button" (click)="panier.retirer(article)">
+                      Retirer
+                    </button>
+                  </div>
+                </div>
+                <div class="fw-bold text-nowrap">{{ article.produit.prix * article.quantite | currency: 'EUR' }}</div>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+      <button class="btn btn-outline-secondary btn-sm mt-3" type="button" (click)="panier.vider()">Vider le panier</button>
+    </div>
+
+    <div class="col-12 col-lg-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 fw-bold">Récapitulatif</h2>
+          <div class="d-flex justify-content-between mt-3">
+            <span>Articles ({{ panier.nombreArticles() }})</span>
+            <span>{{ panier.total() | currency: 'EUR' }}</span>
+          </div>
+          <div class="d-flex justify-content-between text-muted small">
+            <span>Livraison</span>
+            <span>Offerte</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between fs-5 fw-bold mb-3">
+            <span>Total</span>
+            <span>{{ panier.total() | currency: 'EUR' }}</span>
+          </div>
+
+          @if (auth.estConnecte()) {
+            <label for="adresse" class="form-label">Adresse de livraison</label>
+            <textarea id="adresse" class="form-control mb-3" rows="3" placeholder="N°, rue, code postal, ville"
+                      [value]="adresse()" (input)="adresse.set($any($event.target).value)"></textarea>
+            @if (erreur()) {
+              <div class="alert alert-danger py-2 small">{{ erreur() }}</div>
+            }
+            <button class="btn btn-dark w-100" type="button" [disabled]="envoi()" (click)="commander()">
+              @if (envoi()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              Valider la commande
+            </button>
+          } @else {
+            <p class="small text-muted">Connectez-vous pour passer commande.</p>
+            <a class="btn btn-dark w-100" routerLink="/connexion" [queryParams]="{ retour: '/panier' }">Se connecter</a>
+            <a class="btn btn-link w-100" routerLink="/inscription" [queryParams]="{ retour: '/panier' }">Créer un compte</a>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

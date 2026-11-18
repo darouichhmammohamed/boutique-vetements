@@ -1,0 +1,14 @@
+<div class="d-flex flex-column min-vh-100">
+  <app-navbar />
+
+  <main class="container py-4 flex-grow-1">
+    <router-outlet />
+  </main>
+
+  <footer class="bg-dark text-white-50 py-4 mt-5">
+    <div class="container d-flex flex-column flex-md-row justify-content-between gap-2 small">
+      <span>© {{ annee }} Boutique de vêtements · Projet étudiant Angular + Spring Boot</span>
+      <span>Articles et images : Nike</span>
+    </div>
+  </footer>
+</div>

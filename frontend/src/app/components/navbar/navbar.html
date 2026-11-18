@@ -1,0 +1,74 @@
+<div class="bandeau-info text-center small py-1">
+  Livraison offerte · Retours gratuits sous 30 jours
+</div>
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top barre">
+  <div class="container">
+    <a class="navbar-brand marque" routerLink="/" (click)="fermerMenu()">
+      <span class="logo">B</span>
+      <span>BOUTIQUE</span>
+    </a>
+
+    @if (auth.estAdmin()) {
+      <a class="btn btn-dark btn-sm rounded-pill ms-auto me-1 d-lg-none" routerLink="/admin" (click)="fermerMenu()"
+         aria-label="Espace admin">
+        ⚙<span class="d-none d-sm-inline ms-1">Admin</span>
+      </a>
+    }
+
+    <button class="navbar-toggler border-0" type="button" aria-label="Ouvrir le menu"
+            [attr.aria-expanded]="menuOuvert()" (click)="basculerMenu()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" [class.show]="menuOuvert()">
+      <ul class="navbar-nav mx-lg-auto gap-lg-3">
+        <li class="nav-item">
+          <a class="nav-link lien" routerLink="/" routerLinkActive="actif"
+             [routerLinkActiveOptions]="{ exact: true }" (click)="fermerMenu()">Boutique</a>
+        </li>
+        @if (auth.estConnecte()) {
+          <li class="nav-item">
+            <a class="nav-link lien" routerLink="/mes-commandes" routerLinkActive="actif" (click)="fermerMenu()">
+              Mes commandes
+            </a>
+          </li>
+        }
+      </ul>
+
+      <div class="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 pb-3 pb-lg-0">
+        <a class="btn btn-light rounded-pill position-relative px-3" routerLink="/panier" (click)="fermerMenu()"
+           aria-label="Voir le panier">
+          🛒 <span class="ms-1">Panier</span>
+          @if (panier.nombreArticles() > 0) {
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ panier.nombreArticles() }}
+            </span>
+          }
+        </a>
+
+        @if (auth.estAdmin()) {
+          <a class="btn btn-dark rounded-pill px-3 text-nowrap d-none d-lg-inline-block" routerLink="/admin">
+            ⚙ Espace admin
+          </a>
+        }
+        @if (auth.utilisateur(); as utilisateur) {
+          <span class="d-flex align-items-center gap-2 ms-lg-2">
+            <span class="avatar" [title]="utilisateur.email">{{ utilisateur.nom.charAt(0).toUpperCase() }}</span>
+            <span class="small fw-semibold text-nowrap d-lg-none d-xl-inline">{{ utilisateur.nom }}</span>
+          </span>
+          <button class="btn btn-outline-dark btn-sm rounded-pill px-3 text-nowrap" type="button" (click)="deconnexion()">
+            Déconnexion
+          </button>
+        } @else {
+          <a class="btn btn-outline-dark btn-sm rounded-pill px-3" routerLink="/connexion" (click)="fermerMenu()">
+            Connexion
+          </a>
+          <a class="btn btn-dark btn-sm rounded-pill px-3" routerLink="/inscription" (click)="fermerMenu()">
+            Créer un compte
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</nav>

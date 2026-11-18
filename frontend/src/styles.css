@@ -1,0 +1,38 @@
+body {
+  background-color: #f6f7f9;
+}
+
+.carte-produit {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.carte-produit:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12) !important;
+}
+
+.image-produit {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background-color: #f1f1f1;
+}
+
+.miniature {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  background-color: #f1f1f1;
+}
+
+.bandeau {
+  background: linear-gradient(135deg, #111 0%, #3a3a3a 100%);
+}
+
+.btn-taille {
+  min-width: 3.25rem;
+}
+
+.quantite {
+  width: 8rem;
+}

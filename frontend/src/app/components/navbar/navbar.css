@@ -1,0 +1,78 @@
+.bandeau-info {
+  background-color: #111;
+  color: #f1f1f1;
+  letter-spacing: 0.02em;
+}
+
+.barre {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.marque {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+@media (max-width: 575.98px) {
+  .marque {
+    letter-spacing: 0.1em;
+    font-size: 1.1rem;
+  }
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background-color: #111;
+  color: #fff;
+  letter-spacing: 0;
+}
+
+.lien {
+  position: relative;
+  white-space: nowrap;
+  color: #333;
+  font-weight: 500;
+}
+
+.lien::after {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.15rem;
+  height: 2px;
+  background-color: #111;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+.lien:hover::after,
+.lien.actif::after {
+  transform: scaleX(1);
+}
+
+.lien.actif {
+  color: #111;
+  font-weight: 700;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #111;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}

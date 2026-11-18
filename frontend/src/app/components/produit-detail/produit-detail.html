@@ -1,0 +1,61 @@
+<a routerLink="/" class="btn btn-link text-dark px-0 mb-3">← Retour à la boutique</a>
+
+@if (chargement()) {
+  <div class="text-center my-5">
+    <div class="spinner-border text-dark" role="status"></div>
+  </div>
+} @else if (erreur()) {
+  <div class="alert alert-danger">{{ erreur() }}</div>
+} @else if (produit(); as p) {
+  <div class="row g-4 g-lg-5">
+    <div class="col-12 col-md-6">
+      <img [src]="p.imageUrl" [alt]="p.nom" class="img-fluid w-100 rounded-4 shadow-sm image-produit">
+    </div>
+
+    <div class="col-12 col-md-6">
+      <span class="badge bg-secondary mb-2">{{ p.categorie.nom }}</span>
+      <h1 class="h2 fw-bold">{{ p.nom }}</h1>
+      <p class="fs-3 fw-semibold mb-3">{{ p.prix | currency: 'EUR' }}</p>
+      <p class="text-muted">{{ p.description }}</p>
+
+      @if (p.stock === 0) {
+        <div class="alert alert-danger">Ce produit est en rupture de stock.</div>
+      } @else {
+        <h2 class="h6 mt-4">Choisir une taille</h2>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          @for (t of tailles(); track t) {
+            <button type="button" class="btn btn-outline-dark btn-taille" [class.active]="tailleChoisie() === t"
+                    (click)="choisirTaille(t)">
+              {{ t }}
+            </button>
+          }
+        </div>
+
+        <h2 class="h6">Quantité</h2>
+        <div class="input-group quantite mb-2">
+          <button class="btn btn-outline-secondary" type="button" (click)="changerQuantite(-1)"
+                  [disabled]="quantite() <= 1" aria-label="Diminuer la quantité">−</button>
+          <span class="form-control text-center">{{ quantite() }}</span>
+          <button class="btn btn-outline-secondary" type="button" (click)="changerQuantite(1)"
+                  [disabled]="quantite() >= quantiteMax()" aria-label="Augmenter la quantité">+</button>
+        </div>
+        <p class="small text-muted mb-4">{{ p.stock }} article(s) disponible(s)</p>
+
+        <button type="button" class="btn btn-dark btn-lg w-100" [disabled]="!tailleChoisie()" (click)="ajouterAuPanier()">
+          @if (tailleChoisie()) {
+            Ajouter au panier
+          } @else {
+            Choisissez une taille
+          }
+        </button>
+
+        @if (ajoute()) {
+          <div class="alert alert-success d-flex justify-content-between align-items-center mt-3 mb-0">
+            <span>Ajouté au panier ✔</span>
+            <a routerLink="/panier" class="btn btn-success btn-sm">Voir le panier</a>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}

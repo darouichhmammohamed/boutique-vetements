@@ -1,0 +1,56 @@
+<h1 class="h3 fw-bold mb-4">Mes commandes</h1>
+
+@if (nouvelleCommande) {
+  <div class="alert alert-success">
+    Merci ! Votre commande n°{{ nouvelleCommande }} a bien été enregistrée.
+  </div>
+}
+@if (erreur()) {
+  <div class="alert alert-danger">{{ erreur() }}</div>
+}
+
+@if (chargement()) {
+  <div class="text-center my-5">
+    <div class="spinner-border text-dark" role="status"></div>
+  </div>
+} @else {
+  @for (commande of commandes(); track commande.id) {
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center gap-2 py-3">
+        <div>
+          <span class="fw-bold">Commande n°{{ commande.id }}</span>
+          <span class="text-muted small ms-2">{{ commande.dateCommande | date: "dd/MM/yyyy 'à' HH:mm" }}</span>
+        </div>
+        <span class="badge text-bg-{{ couleurStatut(commande.statut) }}">{{ libelleStatut(commande.statut) }}</span>
+      </div>
+      <ul class="list-group list-group-flush">
+        @for (ligne of commande.lignes; track ligne.id) {
+          <li class="list-group-item d-flex align-items-center gap-3">
+            <img [src]="ligne.produit.imageUrl" [alt]="ligne.produit.nom" class="miniature">
+            <div class="flex-grow-1">
+              <div class="fw-semibold">{{ ligne.produit.nom }}</div>
+              <div class="small text-muted">
+                Taille {{ ligne.taille }} · {{ ligne.quantite }} × {{ ligne.prixUnitaire | currency: 'EUR' }}
+              </div>
+            </div>
+            <div class="fw-semibold text-nowrap">{{ ligne.prixUnitaire * ligne.quantite | currency: 'EUR' }}</div>
+          </li>
+        }
+      </ul>
+      <div class="card-footer bg-white d-flex flex-wrap justify-content-between align-items-center gap-2 py-3">
+        <span class="small text-muted">Livraison : {{ commande.adresseLivraison }}</span>
+        <div class="d-flex align-items-center gap-3">
+          @if (commande.statut === 'EN_ATTENTE') {
+            <button class="btn btn-outline-danger btn-sm" type="button" (click)="annuler(commande)">Annuler</button>
+          }
+          <span class="fs-5 fw-bold">{{ commande.total | currency: 'EUR' }}</span>
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <div class="text-center bg-white rounded-4 shadow-sm p-5">
+      <p class="fs-5 mb-3">Vous n'avez pas encore passé de commande.</p>
+      <a routerLink="/" class="btn btn-dark">Commencer mes achats</a>
+    </div>
+  }
+}
