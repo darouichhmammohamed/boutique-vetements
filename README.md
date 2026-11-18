@@ -126,6 +126,17 @@ cd frontend
 ng test
 ```
 
+## Améliorations prévues
+
+- Paiement en ligne en mode test (Stripe)
+- Upload des images des produits au lieu de liens externes
+- Pagination du catalogue et des commandes
+- Déploiement (backend et base de données dans des conteneurs Docker)
+
+## Auteur
+
+**Mohamed Aziz Darouich Hmam** – étudiant en L2 à l'Université d'Orléans
+
 ## Crédits
 
 Projet pédagogique sans but commercial. Les noms des articles et les images appartiennent à Nike, Inc.
