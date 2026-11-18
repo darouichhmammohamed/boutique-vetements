@@ -135,7 +135,7 @@ ng test
 
 ## Auteur
 
-**Mohamed Aziz Darouich Hmam** – étudiant en L2 à l'Université d'Orléans
+**Mohamed Aziz Darouich Hmam** – étudiant en L3 Informatique, parcours MIAGE, à l'Université d'Orléans
 
 ## Crédits
 
